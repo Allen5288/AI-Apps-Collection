@@ -29,6 +29,7 @@ This project demonstrates how to use Azure Cognitive Services for both speech-to
    ```
 
 3. Create a `.env` file in the project root with your Azure credentials:
+   Be mentioned: as the safety issue, we move the api key, and use token from backend request
 
    ```env
    REACT_APP_SPEECH_KEY=your-azure-speech-key-here
