@@ -1,0 +1,100 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+.env*
+.venv/
+venv/
+ENV/
+*.egg-info/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# React
+build/
+dist/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Environment and secrets
+.env
+.env.*
+*.env.*
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Coverage
+coverage/
+*.lcov
+
+# Others
+.idea/
+*.sqlite3
+
+# Ignore local data and cache
+.cache/
+
+# Ignore test output
+junit.xml
+
+# Ignore AI/ML model files
+*.h5
+*.ckpt
+*.pth
+*.pt
+*.pb
+*.tflite
+*.onnx
+*.joblib
+*.pkl
+*.sav
+
+# Ignore large data files
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.npz
+*.npy
+*.zip
+*.tar.gz
+*.tar
+*.gz
+*.bz2
+*.7z
+*.rar
+
+# Ignore images and media
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.avi
+*.mov
+*.webm
+*.wav
+*.mp3
+*.ogg
