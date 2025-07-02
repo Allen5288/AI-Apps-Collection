@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import SimpleTextToSpeech from "./SimpleTextToSpeech";
 import { SpeechToTextWithMSSdk } from "./SpeechToTextWithMSSdk";
+import UploadAndTrans from "./UploadAndTrans";
 
 function App() {
   const [text, setText] = React.useState("");
@@ -26,6 +27,10 @@ function App() {
       <div className="display-section">
         <h1>Speech to Text Demo with SpeechToTextWithMSSdk</h1>
         <SpeechToTextWithMSSdk />
+      </div>
+      <div className="display-section">
+        <h1>Speech to Text Demo with UploadAndTrans</h1>
+        <UploadAndTrans />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
+import "./custom.css";
 
 export function SpeechToTextWithMSSdk() {
   const [isListening, setIsListening] = useState(false);
@@ -81,40 +82,48 @@ export function SpeechToTextWithMSSdk() {
     console.log("Paused listening.");
   };
 
-  const startListening = () => {
-    if (!isListening && recognizer.current) {
-      setIsListening(true);
-      recognizer.current.startContinuousRecognitionAsync(() => {
-        console.log("Started listening...");
-      });
-    }
-  };
-
-  const stopListening = () => {
-    setIsListening(false);
-    recognizer.current && recognizer.current.stopContinuousRecognitionAsync(() => {
-      console.log("Speech recognition stopped.");
-    });
+  const clearTranscript = () => {
+    setMyTranscript("");
+    setRecTranscript("");
   };
 
   return (
-    <div>
-      <button onClick={pauseListening}>Pause Listening</button>
-      <button onClick={startListening}>Start Listening</button>
-      <button onClick={stopListening}>Stop Listening</button>
-      <div>
-        <div>Recognizing Transcript :</div>
-        <div>
-          <textarea
-            rows="5"
-            cols="40"
-            value={recognizingTranscript}
-            readOnly
-          />
+    <div className="ai-card">
+      <div className="ai-card-header">Live Speech-to-Text (Microphone)</div>
+      <div className="ai-card-body ai-flex-col ai-gap-lg">
+        <div className="ai-flex-row ai-gap-md ai-center">
+          <button
+            className={`ai-btn ${
+              isListening ? "ai-btn-danger ai-recording" : "ai-btn-primary"
+            }`}
+            onClick={isListening ? pauseListening : initRecognizer}
+            disabled={!tokenData}
+          >
+            <span className="ai-btn-icon">
+              {isListening ? "⏹️" : "🎤"}
+            </span>
+            {isListening ? "Stop Listening" : "Start Listening"}
+          </button>
+          <button
+            className="ai-btn ai-btn-secondary"
+            onClick={clearTranscript}
+            disabled={!myTranscript && !recognizingTranscript}
+          >
+            <span className="ai-btn-icon">🗑️</span>
+            Clear
+          </button>
         </div>
-        <div>RecognizedTranscript :</div>
-        <div>
-          <textarea rows="5" cols="40" value={myTranscript} readOnly />
+        <div className="ai-result-container ai-mt-lg">
+          <label className="ai-label">
+            Live Transcript {isListening && <span style={{color: 'var(--ai-danger)'}}>● Recording</span>}
+          </label>
+          <textarea
+            className="ai-output-display"
+            value={recognizingTranscript || myTranscript || (tokenData ? "Ready to listen..." : "Loading speech service...")}
+            readOnly
+            rows={6}
+            placeholder="Speech will appear here..."
+          />
         </div>
       </div>
     </div>

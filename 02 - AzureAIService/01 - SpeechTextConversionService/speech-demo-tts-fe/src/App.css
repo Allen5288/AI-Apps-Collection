@@ -1,46 +1,84 @@
+/* Modern, beautiful style for three main sections */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+  color: #222;
 }
 
 .display-section {
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  margin: 32px auto;
+  padding: 32px 24px 24px 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(60, 80, 120, 0.10), 0 1.5px 6px 0 rgba(60, 80, 120, 0.08);
+  background: #fff;
+  max-width: 700px;
+  transition: box-shadow 0.2s;
+}
+.display-section:hover {
+  box-shadow: 0 8px 40px 0 rgba(60, 80, 120, 0.18), 0 2px 8px 0 rgba(60, 80, 120, 0.10);
+}
+
+.display-section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #2a3a5a;
+  letter-spacing: 0.5px;
+}
+
+.group textarea {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db;
+  padding: 12px;
+  font-size: 1.1rem;
+  background: #f3f6fa;
+  color: #222;
+  margin-bottom: 16px;
+  transition: border 0.2s;
+}
+.group textarea:focus {
+  border: 1.5px solid #7b61ff;
+  outline: none;
+}
+
+button, .btn {
+  font-size: 1rem;
+  border: none;
+  background: none;
+  color: #7b61ff;
+  cursor: pointer;
+  margin: 0 8px 8px 0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  display: inline-flex;
+  align-items: center;
+}
+button:hover, .btn:hover {
+  background: #f3f0ff;
+  color: #4b2996;
+}
+
+.output-display {
+  background: #f3f6fa;
+  color: #2a3a5a;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db;
+  padding: 16px;
+  min-height: 180px;
+  width: 100%;
+  font-size: 1.1rem;
+  margin-top: 16px;
+  resize: vertical;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .display-section {
+    max-width: 98vw;
+    padding: 18px 4vw;
+  }
 }
