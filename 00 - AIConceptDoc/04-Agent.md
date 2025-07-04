@@ -67,3 +67,68 @@ This will launch the agent using your configuration. You can now interact with y
 6. Run your agent
 
 For more details, see the [crewai documentation](https://github.com/joaomdmoura/crewai).
+
+
+## Using Docker Model
+
+This section explains how to use AI models with Docker, which allows you to run models in isolated containers without installing them directly on your system. This is useful for running lightweight or large models, testing, and keeping your environment clean.
+
+### 1. Pull a Model Image
+
+Use the following command to pull a model image from a Docker registry (e.g., Docker Hub):
+
+```bash
+docker pull ai/smollm2  # You can pull any model; this example uses a lightweight model
+```
+- Replace `ai/smollm2` with the name of the model you want to use.
+- Make sure you have Docker installed and running on your machine.
+
+### 2. Run the Model Container
+
+Start the model in a Docker container. This will launch the model server and allow you to interact with it (e.g., via API or CLI):
+
+```bash
+docker run -it --rm -p 11434:11434 ai/smollm2
+```
+- `-it` runs the container interactively.
+- `--rm` removes the container after it stops.
+- `-p 11434:11434` maps the model's port to your local machine (adjust as needed).
+
+You can now send requests to the model (for example, using curl or a client library) at `localhost:11434`.
+
+### 3. Interact with the Model
+
+Depending on the model, you can interact via HTTP API, CLI, or other means. For example, with Ollama-compatible models:
+
+```bash
+ollama run smollm2
+```
+
+Or, for a REST API:
+
+```bash
+curl http://localhost:11434/api/generate -d '{"prompt": "Hello, world!"}'
+```
+
+### 4. Remove the Model Image (Optional)
+
+To free up disk space, you can remove the model image when you no longer need it:
+
+```bash
+docker rmi ai/smollm2
+```
+
+---
+
+**Summary of Docker Model Steps:**
+1. Pull the model image with `docker pull`
+2. Run the model container with `docker run`
+3. Interact with the model (API, CLI, etc.)
+4. (Optional) Remove the image with `docker rmi`
+
+**Tips:**
+- Always check the model's documentation for specific usage instructions and required ports.
+- You can run multiple models in parallel by using different ports.
+- Use Docker Compose for more complex multi-container setups.
+
+For more details, see the [Docker documentation](https://docs.docker.com/) and the model provider's instructions.
