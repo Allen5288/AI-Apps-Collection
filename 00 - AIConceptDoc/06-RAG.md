@@ -1,1 +1,1 @@
-![RAG Concept](../image/i-ragConcept.png)
+![RAG Concept](./img/i-ragConcept.png)

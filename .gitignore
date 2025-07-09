@@ -87,7 +87,6 @@ junit.xml
 *.rar
 
 # Ignore images and media
-*.png
 *.jpg
 *.jpeg
 *.gif

@@ -8,4 +8,5 @@ def upload_pdfs_api(files):
 
 
 def ask_question(question):
-    return requests.post(f"{API_URL}/ask_question", json={"question": question})
+    # Backend expects form data, not JSON
+    return requests.post(f"{API_URL}/ask/", data={"question": question})
