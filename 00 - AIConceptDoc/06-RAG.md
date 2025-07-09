@@ -1,0 +1,1 @@
+![RAG Concept](../image/i-ragConcept.png)
