@@ -69,4 +69,8 @@ source .venv/Scripts/activate
 cd server
 uv pip install -r requirements.txt
 
+# frontend
+streamlit run app.py
 ```
+
+## 5 Other please refer README in Server and Client
