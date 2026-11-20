@@ -60,11 +60,83 @@ once, swap the provider.
 Rule: one swap per day, re-run the golden set after each swap.
 If Recall@5 drops, the swap does not ship.
 
+## 2026-11-21 — Part 2: the golden set file and the Recall@5 scoring script
+
+Day 1 planned the evaluation; today it becomes a file and a script.
+The golden set lives in the repo so every swap (Azure embeddings,
+Azure OpenAI, Container Apps) is scored against the same questions.
+
+### `eval/golden.jsonl` — the format
+
+One JSON object per line. Three example rows — real entries use the
+PDFs already ingested, with chunk ids from the actual index:
+
+```json
+{"question": "What are the symptoms of diabetes?", "relevant": ["doc-12 chunk 3", "doc-12 chunk 4"], "answer": "Increased thirst, frequent urination, fatigue and blurred vision.", "must_not": ["diabetes is caused by eating too much sugar"]}
+{"question": "What should a patient do if they miss a dose of metformin?", "relevant": ["doc-07 chunk 2"], "answer": "Take it as soon as remembered, unless it is almost time for the next dose — then skip it and never double up.", "must_not": ["take two doses at once"]}
+{"question": "Does this document say anything about treating diabetes with insulin pumps?", "relevant": [], "answer": "The documents do not cover insulin pumps.", "must_not": ["insulin pumps are recommended"]}
+```
+
+Rules for writing rows:
+
+- `relevant` is empty on purpose for unanswerable questions — the
+  correct behaviour is to say the documents do not cover it.
+- Keep the set at 20 questions: 12 factual lookups, 4 comparisons
+  or multi-document questions, 4 unanswerable ones.
+- Never put real patient data in the file. Questions come from the
+  public PDFs in the corpus, not from any person's records.
+
+### Scoring script — save as `eval/score_recall.py`
+
+The script takes the golden file and a retrieval-run output
+(`question` → list of retrieved chunk ids, top 5) and prints
+per-question and average Recall@5. No LLM, no API keys — the point
+is a number you can trust before any model judgement enters the loop.
+
+```python
+import json
+import sys
+
+
+def recall_at_k(relevant: list[str], retrieved: list[str], k: int = 5) -> float:
+    if not relevant:
+        return 1.0  # unanswerable question: nothing to retrieve
+    found = set(relevant) & set(retrieved[:k])
+    return len(found) / len(relevant)
+
+
+def main(golden_path: str, run_path: str) -> None:
+    golden = [json.loads(line) for line in open(golden_path) if line.strip()]
+    run = {json.loads(line)["question"]: json.loads(line)["retrieved"]
+           for line in open(run_path) if line.strip()}
+    scores = []
+    for row in golden:
+        score = recall_at_k(row["relevant"], run.get(row["question"], []))
+        scores.append(score)
+        print(f"{score:.2f}  {row['question']}")
+    print(f"\nRecall@5 (mean over {len(scores)} questions): "
+          f"{sum(scores) / len(scores):.2f}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
+```
+
+Run it with `python eval/score_recall.py eval/golden.jsonl eval/run-2026-11-21.jsonl`.
+The retrieval-run file is produced by a tiny runner that calls the
+same retrieval code the API uses and dumps the top 5 chunk ids per
+question — that runner is the next addition to this folder.
+
+### What this sets up for the Azure swap
+
+Day 2 swaps embeddings + vector store to Azure OpenAI + Azure AI
+Search. The swap is judged by one rule: re-run the same golden set
+through the same script. If mean Recall@5 drops below the Day 1
+baseline, the swap does not ship — no matter how good the demo looks.
+
 ### What I will add next in this file
 
-- 2026-11-21: `eval/golden.jsonl` (20 questions) and the scoring
-  script for Recall@5.
 - 2026-11-22: Azure AI Search index design — fields, filters
   (`tenant_id`, `doc_type`), and chunk metadata.
-- Later: cost per 100 questions, Pinecone + Groq vs Azure, and
-  when the managed Azure path is worth it.
+- Later: cost per 100 questions, Pinecone + Groq vs Azure, and when
+  the managed Azure path is worth it.
