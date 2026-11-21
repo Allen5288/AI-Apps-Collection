@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physio Clinic RAG Assistant — Concept Demo</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+.badge { background: #fff3cd; border: 1px solid #e6c200; padding: 0.5rem; border-radius: 6px; }
+#chat { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; min-height: 220px; margin: 1rem 0; }
+.msg { margin: 0.75rem 0; }
+.msg.user { text-align: right; }
+.msg.assistant { background: #f2f6ff; padding: 0.75rem; border-radius: 8px; white-space: pre-wrap; }
+.sources { font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
+form { display: flex; gap: 0.5rem; }
+input { flex: 1; padding: 0.6rem; font-size: 1rem; }
+button { padding: 0.6rem 1rem; font-size: 1rem; cursor: pointer; }
+.samples button { margin: 0.25rem 0.25rem 0.25rem 0; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<h1>Physio Clinic RAG Assistant</h1>
+<p class="badge"><strong>Concept demo — synthetic data only.</strong> There is no real clinic, no real patient data and no real client behind this demo. Answers come only from the demo documents in <code>data/</code>.</p>
+<div id="chat" aria-live="polite">
+<div class="msg assistant">Ask me about opening hours, prices, bulk billing, exercise handouts or bookings. If the answer is not in our documents, I will say so.</div>
+</div>
+<form id="ask-form">
+<input id="q" type="text" placeholder="Ask a question, for example: What are your opening hours on Saturday?" autocomplete="off" required>
+<button type="submit">Ask</button>
+</form>
+<div class="samples">
+<p>Try:</p>
+<button type="button" data-q="What are your opening hours on Saturday?">Saturday hours</button>
+<button type="button" data-q="How much does an initial consultation cost?">Initial consult cost</button>
+<button type="button" data-q="Do you bulk bill?">Bulk billing</button>
+<button type="button" data-q="What exercises are on the lower back handout?">Lower back exercises</button>
+<button type="button" data-q="What is my MRI result?">MRI result (not in our documents)</button>
+</div>
+<p><small>This demo does not give medical advice or a diagnosis. For urgent symptoms, seek urgent medical care.</small></p>
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('q');
+function addMsg(text, cls, sources) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.textContent = text;
+  if (sources && sources.length) {
+    const s = document.createElement('div');
+    s.className = 'sources';
+    s.textContent = 'Sources: ' + sources.join(', ');
+    div.appendChild(s);
+  }
+  chat.appendChild(div);
+  div.scrollIntoView();
+}
+async function ask(question) {
+  addMsg(question, 'user');
+  input.value = '';
+  try {
+    const res = await fetch('/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: question})
+    });
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const data = await res.json();
+    addMsg(data.answer, 'assistant', data.sources);
+  } catch (err) {
+    addMsg('Sorry, the demo server did not answer. Is the backend running on http://127.0.0.1:8000/ ?', 'assistant');
+  }
+}
+document.getElementById('ask-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  if (input.value.trim()) ask(input.value.trim());
+});
+document.querySelectorAll('.samples button').forEach(function (b) {
+  b.addEventListener('click', function () { ask(b.getAttribute('data-q')); });
+});
+</script>
+</body>
+</html>
