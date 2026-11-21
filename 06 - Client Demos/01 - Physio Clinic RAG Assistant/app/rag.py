@@ -136,7 +136,9 @@ class Retriever:
         top = results[0]
         # PLUGGABLE LLM SPOT: if a provider is configured in llm.py, let
         # it draft from the retrieved context; otherwise use the extractive
-        # answer below. The citation still comes from retrieval.
+        # answer below. The citation still comes from retrieval. If the
+        # provider call fails (for example, it is not implemented yet),
+        # fall back to the extractive answer instead of failing the request.
         try:
             from app.llm import generate_answer as _llm_answer
         except Exception:
@@ -144,7 +146,12 @@ class Retriever:
                 from llm import generate_answer as _llm_answer
             except Exception:
                 _llm_answer = None
-        llm_text = _llm_answer(question, top["full_text"]) if _llm_answer else None
+        llm_text = None
+        if _llm_answer:
+            try:
+                llm_text = _llm_answer(question, top["full_text"])
+            except Exception:
+                llm_text = None
         if llm_text:
             body = llm_text.strip()
         else:
