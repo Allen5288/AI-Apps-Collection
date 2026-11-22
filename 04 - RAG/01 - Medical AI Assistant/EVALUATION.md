@@ -251,6 +251,101 @@ how good the demo looks.
 
 ### What I will add next in this file
 
-- 2026-11-23: cost per 100 questions — Pinecone + Groq vs Azure AI
-  Search + Azure OpenAI, and when the managed Azure path is worth it.
-- Later: the Day 3 generation swap to Azure OpenAI, scored the same way.
+- 2026-11-24: the Day 3 generation swap to Azure OpenAI, scored
+  against the same golden set — faithfulness and cost per 100
+  questions, side by side.
+- Later: moving the FastAPI backend to Azure Container Apps.
+
+## 2026-11-23 — Part 4: cost per 100 questions — Pinecone + Groq vs Azure AI Search + Azure OpenAI
+
+Day 3 of the Azure swap is a generation change, but before swapping
+the model it is worth pricing the two stacks. A RAG system's cost
+has three parts: embeddings (cheap, mostly one-off at ingest),
+retrieval (the vector store), and generation (the LLM — this is
+where the money goes).
+
+### The cost model
+
+Per question, the LLM sees the prompt plus the retrieved chunks and
+writes an answer. With 5 chunks of ~250 tokens, a ~300-token prompt
+and a ~150-token answer:
+
+- Input tokens per question: ~1,800
+- Output tokens per question: ~150
+- Query embedding: ~10 tokens (documents are embedded once, at
+  ingest — a one-off cost, not per question)
+
+### Indicative rates — verify on the pricing page before budgeting
+
+Rates move. Treat these as November 2026 list prices and update
+`eval/cost.py` when they change:
+
+| Service | Indicative rate |
+|---|---|
+| Groq LLaMA 3 70B | ~$0.59 / 1M input tokens, ~$0.79 / 1M output |
+| Azure OpenAI GPT-4o | ~$2.50 / 1M input tokens, ~$10.00 / 1M output |
+| Azure OpenAI text-embedding-3-large | ~$0.13 / 1M tokens |
+| Pinecone serverless | usage-based reads/writes; no fixed monthly tier |
+| Azure AI Search, Basic tier | ~$75 / month, fixed |
+
+### Worked cost per 100 questions
+
+| | Current: Groq + Pinecone | Azure: GPT-4o + AI Search |
+|---|---|---|
+| Generation (100 x 1,800 in + 150 out) | ~$0.12 | ~$0.60 |
+| Embeddings (100 queries) | under $0.01 | under $0.01 |
+| Vector store | usage-based, cents | ~$75 / month fixed |
+| **Total per 100 questions** | **~$0.12 + usage** | **~$0.60 + $75 / month** |
+
+The generation swap alone makes each question about 5x more
+expensive in tokens — but both are under a dollar per 100
+questions, so at this volume the LLM is not the decision. The
+decision is the fixed $75/month search tier: it only makes sense
+once the question volume, or the need for a managed service with
+an SLA and Azure data residency, justifies a standing monthly
+cost. At low volume Pinecone serverless + Groq is far cheaper;
+the Azure path buys operational simplicity, not savings.
+
+### The calculator — save as `eval/cost.py`
+
+```python
+# Rates are indicative list prices (Nov 2026) — update from the
+# provider pricing pages before budgeting.
+RATES = {
+    "groq_llama3_70b": {"input": 0.59, "output": 0.79},   # $ per 1M tokens
+    "azure_gpt4o": {"input": 2.50, "output": 10.00},
+    "azure_embedding_3_large": 0.13,
+}
+AZURE_SEARCH_BASIC_MONTHLY = 75.0
+
+def cost_per_100_questions(model: str, input_tokens: int = 1800,
+                           output_tokens: int = 150) -> float:
+    r = RATES[model]
+    per_question = (input_tokens * r["input"]
+                    + output_tokens * r["output"]) / 1_000_000
+    return round(per_question * 100, 4)
+
+if __name__ == "__main__":
+    for model in ("groq_llama3_70b", "azure_gpt4o"):
+        print(model, "$", cost_per_100_questions(model), "per 100 questions")
+    print("Azure AI Search Basic: $", AZURE_SEARCH_BASIC_MONTHLY, "/ month fixed")
+```
+
+### When the managed Azure path is worth it
+
+- **Volume:** thousands of questions a month, so the fixed tier
+  amortises and the ops time saved exceeds $75.
+- **One vendor:** the whole stack (identity, storage, search,
+  models) under Azure AD with one audit trail.
+- **Data residency / compliance:** documents must stay in a region
+  or boundary Azure guarantees and Pinecone/Groq do not.
+- **Not worth it for:** saving money. If cost is the driver, stay
+  on the usage-based stack and re-check the rates each quarter.
+
+### What this sets up
+
+The Day 3 swap (generation to Azure OpenAI) is now a measured
+trade-off, not a guess: ~5x the token cost per question, plus a
+fixed search tier, in exchange for a managed stack. The swap ships
+only if the golden set scores from Parts 2 and 3 hold — a cheaper
+answer that is less faithful is not a saving.
