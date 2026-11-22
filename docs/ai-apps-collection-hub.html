@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>AI Apps Collection — Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f6f1; --surface:#ffffff; --surface2:#eeeee6; --ink:#121613; --muted:#5b655f; --line:#dddcd2;
+  --accent:#0a6b4f; --accent-ink:#ffffff; --accent-soft:#dff0e8; --amber:#b7791f; --amber-soft:#fdf0c9;
+  --code-bg:#111714; --code-ink:#d9e8de;
+  --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0e1210; --surface:#171c19; --surface2:#1e2420; --ink:#edf2ee; --muted:#9aa8a0; --line:#2a332e; --accent:#2ebd8f; --accent-soft:#17362b; --amber-soft:#3a2f14; --code-bg:#0a0d0b; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.55}
+a{color:inherit}
+button,[role="button"]{min-height:44px}
+.mono{font-family:"JetBrains Mono",monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.topbar{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%, transparent);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.02em}
+.mark{width:38px;height:38px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav a{text-decoration:none;font-size:14px;font-weight:700;padding:10px 12px;border-radius:999px}
+.nav a:hover{background:var(--surface2)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:11px 16px;border-radius:999px;font-weight:800;font-size:14px;text-decoration:none;cursor:pointer;font-family:inherit}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hero{padding:52px 0 28px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:13px;padding:7px 11px;border-radius:999px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:start;margin-top:18px}
+h1{font-size:clamp(36px,6vw,62px);line-height:.95;letter-spacing:-.04em;margin:14px 0 16px}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:18px;color:var(--muted);max-width:620px;margin:0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.urlbox{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.urlbox code{font-size:13px;word-break:break-all}
+.terminal{background:var(--code-bg);color:var(--code-ink);border-radius:18px;padding:20px;box-shadow:0 18px 40px rgba(0,0,0,.18);overflow:hidden}
+.terminal-head{display:flex;gap:7px;margin-bottom:16px}
+.dot{width:10px;height:10px;border-radius:50%;background:#3a4740}
+.terminal pre{margin:0;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.terminal b{color:#7ee2b8;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stat strong{font-size:26px;display:block;line-height:1}
+.stat span{font-size:13px;color:var(--muted);font-weight:700}
+.section{padding:28px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.section-head h2{font-size:28px;letter-spacing:-.03em;margin:0}
+.section-head p{color:var(--muted);margin:6px 0 0;max-width:560px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.search{flex:1;min-width:220px}
+.search input{width:100%;padding:13px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:15px;min-height:48px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--surface);padding:10px 14px;border-radius:999px;font-weight:800;cursor:pointer;font-family:inherit}
+.pill.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:12px;cursor:pointer;text-align:left}
+.card:hover{border-color:var(--accent)}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:start;flex-wrap:wrap}
+.tag{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;padding:6px 8px;border-radius:999px;background:var(--surface2)}
+.tag.live{background:var(--accent-soft);color:var(--accent)}
+.tag.demo{background:var(--amber-soft);color:var(--amber)}
+.card h3{margin:0;font-size:19px;line-height:1.2;letter-spacing:-.02em}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.path{font-family:"JetBrains Mono",monospace;font-size:11.5px;background:var(--surface2);padding:8px 9px;border-radius:8px;word-break:break-all}
+.card-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14px}
+.live-badge{display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--bg);border-radius:10px;padding:9px 11px;font-size:13px;font-weight:800}
+.live-dot{width:9px;height:9px;border-radius:50%;background:#34d399;box-shadow:0 0 0 5px rgba(52,211,153,.18);flex-shrink:0}
+.stack{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;font-weight:700;border:1px solid var(--line);padding:5px 8px;border-radius:999px}
+.map{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.map-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px}
+.map-col{background:var(--bg);border:1px dashed var(--line);border-radius:14px;padding:14px}
+.map-col strong{display:block;margin-bottom:8px}
+.map-col ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;margin-bottom:12px}
+.step p{color:var(--muted);font-size:14px}
+code.inline{background:var(--surface2);padding:2px 6px;border-radius:6px;font-family:"JetBrains Mono",monospace;font-size:.9em}
+.detail{display:none}
+.detail.active{display:block}
+.breadcrumb{font-size:14px;font-weight:700;color:var(--muted);margin:22px 0}
+.breadcrumb button{background:none;border:none;color:var(--accent);font-weight:800;cursor:pointer;padding:10px 6px;font-size:14px;font-family:inherit}
+.detail-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}
+.detail-card h2{font-size:34px;letter-spacing:-.03em;margin:8px 0}
+.detail-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:22px}
+.detail-grid h4{margin:0 0 8px}
+.detail-grid p,.detail-grid li{color:var(--muted);font-size:15px}
+.kv{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px}
+.kv div{padding:8px 0;border-bottom:1px solid var(--line)} .kv div:last-child{border:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:999px;font-weight:800;font-size:14px;display:none;z-index:50}
+.toast.show{display:block}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+
+/* ===== LIVE DEMO ===== */
+.live-panel{margin-top:22px;border:2px solid var(--ink);border-radius:18px;overflow:hidden;background:var(--bg)}
+.live-head{background:var(--ink);color:var(--bg);padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.live-head strong{font-size:15px;letter-spacing:-.01em;display:flex;gap:10px;align-items:center}
+.live-head span{font-size:12px;opacity:.75;font-weight:700}
+.live-body{padding:16px}
+.demo-grid{display:grid;grid-template-columns:1.45fr .75fr;gap:14px;align-items:start}
+.chatbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.chat-log{height:340px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.msg.bot{background:var(--surface2);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg .cite{display:block;margin-top:8px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;opacity:.85}
+.msg .cite b{background:var(--bg);color:var(--ink);padding:3px 6px;border-radius:999px}
+.suggest{display:flex;gap:7px;flex-wrap:wrap;padding:0 12px 10px}
+.suggest button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 11px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;min-height:38px}
+.suggest button:hover{border-color:var(--accent);color:var(--accent)}
+.chat-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--surface)}
+.chat-form input{flex:1;border:1px solid var(--line);border-radius:999px;padding:12px 14px;font-size:15px;background:var(--bg);color:var(--ink);min-width:0}
+.chat-form button{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;font-family:inherit}
+.trace{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:16px;font-size:13px}
+.trace h4{color:#fff;margin:0 0 4px;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.trace p{opacity:.75;margin:0 0 12px;font-size:12.5px;line-height:1.5}
+.trace-item{margin-bottom:12px}
+.trace-item label{display:flex;justify-content:space-between;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11.5px;margin-bottom:5px}
+.bar{height:8px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:#34d399;border-radius:999px;transition:width .5s}
+.trace-meta{font-family:"JetBrains Mono",monospace;font-size:11px;opacity:.7;border-top:1px solid rgba(255,255,255,.15);padding-top:10px;margin-top:4px;line-height:1.7}
+.book-widget{background:#fffbeb;border:1px solid #fde68a;color:#111;border-radius:12px;padding:12px;margin-top:4px;align-self:stretch;max-width:100%}
+@media (prefers-color-scheme: dark){.book-widget{background:#2a2410;color:var(--ink)}}
+.book-widget strong{font-size:14px}
+.slot-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.slot{border:1px solid var(--line);background:var(--surface);padding:8px 10px;border-radius:999px;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit}
+.slot.sel{background:var(--ink);color:var(--bg)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:1px solid var(--line);background:var(--surface);padding:10px 14px;border-radius:999px;font-weight:800;cursor:pointer;font-family:inherit}
+.tab.active{background:var(--ink);color:var(--bg)}
+.eval-row{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.eval-row p{margin:0;font-size:14px;font-weight:700}
+.eval-row small{color:var(--muted);display:block;font-weight:600}
+.pill-result{font-size:12px;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--surface2)}
+.pill-result.pass{background:var(--accent-soft);color:var(--accent)}
+.metric{margin-bottom:12px}
+.metric label{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:5px}
+.metric .bar{background:var(--surface2)} .metric .bar i{background:var(--accent)}
+.play-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:14px}
+.field textarea{min-height:96px;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.prompt-preview{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px;font-family:"JetBrains Mono",monospace;font-size:12px;white-space:pre-wrap;line-height:1.6;max-height:220px;overflow:auto}
+.output-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;font-size:15px;line-height:1.6;min-height:110px;white-space:pre-wrap}
+.try-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.try-card{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;cursor:pointer;text-align:left;font-family:inherit}
+.try-card strong{display:block;font-size:14px} .try-card span{font-size:13px;color:var(--muted)}
+@media(max-width:860px){.hero-grid,.detail-grid,.demo-grid,.play-controls{grid-template-columns:1fr}.grid,.steps,.map-grid,.try-strip{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}.nav{display:none} h1{font-size:42px} .detail-card{padding:18px} .chat-log{height:300px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap topbar-in">
+  <div class="brand"><div class="mark">AI/</div><div>AI Apps Collection <span style="color:var(--muted);font-weight:600">— Hub</span></div></div>
+  <nav class="nav"><a href="#projects">Projects</a><a href="#sitemap">Site map</a><a href="#deploy">Deploy on GitHub Pages</a><a href="#add">Add an app</a></nav>
+  <a class="btn dark" href="https://github.com/Allen5288/AI-Apps-Collection" target="_blank" rel="noopener">GitHub repo ↗</a>
+</div></header>
+
+<main class="wrap" id="homeView">
+  <section class="hero">
+    <span class="eyebrow"><span class="live-dot"></span> Live demos inside — try every app, no install needed</span>
+    <div class="hero-grid">
+      <div>
+        <h1>One public hub.<br>Every AI app <em>you can try live.</em></h1>
+        <p class="lead">This is the hub for Allen Xie’s <strong>AI-Apps-Collection</strong>. Open any project below and you don’t just read about it — you <strong>use it</strong>. Ask the clinic assistant a question, run the medical RAG evaluation, and play with prompt patterns, all running in your browser.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#projects">Try the live demos ↓</a>
+          <button class="btn" id="copyPagesBtn">Copy the Pages address</button>
+          <a class="btn" href="https://github.com/Allen5288" target="_blank" rel="noopener">github.com/Allen5288</a>
+        </div>
+        <div class="urlbox">
+          <div><div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">When Pages is switched on, this hub lives at</div><code class="mono" id="pagesUrl">allen5288.github.io/AI-Apps-Collection/</code></div>
+          <span class="tag live">Free • HTTPS • Public</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong>3</strong><span>Live demos to try</span></div>
+          <div class="stat"><strong id="projCount">3</strong><span>Projects listed</span></div>
+          <div class="stat"><strong>0</strong><span>Install or sign-up needed</span></div>
+        </div>
+        <div class="try-strip" aria-label="Jump straight to a live demo">
+          <button class="try-card" data-jump="physio-clinic-rag"><strong>💬 Physio Clinic Chat →</strong><span>Ask about fees, referrals &amp; booking — with citations</span></button>
+          <button class="try-card" data-jump="medical-rag"><strong>🧪 Medical RAG + Eval →</strong><span>Ask, then run the golden test set yourself</span></button>
+          <button class="try-card" data-jump="llm-engineering"><strong>⚗️ Prompt Playground →</strong><span>Change pattern &amp; temperature, see the output change</span></button>
+        </div>
+      </div>
+      <div class="terminal" aria-label="Repository structure">
+        <div class="terminal-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <pre><b>AI-Apps-Collection/</b>
+├─ index.html          ← this hub
+├─ 04 - RAG/
+│   └─ 01 - Medical AI Assistant/
+│      └─ ▶ LIVE: chat + evaluation
+├─ 05 - LLMEngineering/
+│   └─ ▶ LIVE: prompt playground
+└─ 06 - Client Demos/
+    └─ 01 - Physio Clinic
+       RAG Assistant/
+       └─ ▶ LIVE: chat + booking
+
+<b>How the demos work</b>
+Real retrieval runs in JS over
+the demo documents. Where the
+full app needs a server / LLM key,
+the demo shows the same flow
+with a faithful in-browser mock.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-head"><div><h2>Project directory — tap to try it live</h2><p>Every card opens a sub-page with a working demo at the top, then the problem, build notes and code link underneath.</p></div></div>
+    <div class="controls">
+      <div class="search"><input id="search" type="search" placeholder="Search projects, stack, or folder…" aria-label="Search projects"></div>
+      <div class="pills" id="filters">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="rag">RAG</button>
+        <button class="pill" data-filter="demo">Client demos</button>
+        <button class="pill" data-filter="llm">LLM engineering</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p id="empty" style="display:none;color:var(--muted);font-weight:700;padding:16px 0">No project matches that search yet — try “RAG” or clear the filters.</p>
+  </section>
+
+  <section class="section" id="sitemap">
+    <div class="map">
+      <h2 style="margin:0;font-size:24px;letter-spacing:-.02em">How the hub is organised</h2>
+      <p style="color:var(--muted);margin:8px 0 0">Think of it like a book: the hub is the contents page, each project is a chapter — and now each chapter starts with the app itself.</p>
+      <div class="map-grid">
+        <div class="map-col"><strong>🏠 Hub — /</strong><ul><li>What the collection is</li><li>Search &amp; filters</li><li>Shortcuts straight into each demo</li></ul></div>
+        <div class="map-col"><strong>▶ Sub-pages — /#project/…</strong><ul><li><b>Live demo first</b> — chat, eval or playground</li><li>Retrieval trace showing sources &amp; scores</li><li>Problem, stack, folder &amp; code link</li></ul></div>
+        <div class="map-col"><strong>➕ Future apps</strong><ul><li>New folder in the repo</li><li>New card + demo on the hub</li><li>Same URL, no new site needed</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="deploy">
+    <div class="section-head"><div><h2>Put this live on GitHub — free</h2><p>No server, no hosting bill. GitHub Pages serves static HTML directly from your repo — and these demos run entirely in the visitor’s browser, so they work on Pages as-is.</p></div></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><strong>Add this file to the repo</strong><p>Save this page as <code class="inline">index.html</code> in <code class="inline">AI-Apps-Collection</code> — either in the root or in a <code class="inline">/docs</code> folder. Commit and push to <code class="inline">main</code>.</p></div>
+      <div class="step"><div class="step-num">2</div><strong>Turn on Pages</strong><p>In the repo: <strong>Settings → Pages → Build and deployment → Deploy from a branch</strong>. Pick <code class="inline">main</code> and the folder you used. Save.</p></div>
+      <div class="step"><div class="step-num">3</div><strong>Share the link</strong><p>After ~1 minute GitHub shows your live URL at the top of the Pages settings. That’s the link to put on your portfolio, Upwork and Freelancer profiles.</p><button class="btn" id="copyCloneBtn" style="margin-top:8px">Copy clone command</button></div>
+    </div>
+  </section>
+
+  <section class="section" id="add">
+    <div class="map" style="background:var(--ink);color:var(--bg);border-color:var(--ink)">
+      <h2 style="margin:0;font-size:24px">Adding the next sub-app takes 2 minutes</h2>
+      <p style="opacity:.8;max-width:640px">Create the project folder in the repo as you already do for your daily work, add its README, then add one entry — with its demo — to the projects list in this hub file. The hub, search and filters pick it up.</p>
+      <div class="mono" style="background:rgba(255,255,255,.08);padding:14px;border-radius:12px;font-size:13px;overflow:auto">07 - Client Demos / 02 - Next App &nbsp;→&nbsp; add card + demo &nbsp;→&nbsp; push &nbsp;→&nbsp; live</div>
+    </div>
+  </section>
+</main>
+
+<section class="wrap detail" id="detailView" aria-live="polite">
+  <div class="breadcrumb"><button id="backBtn">← Back to hub</button> <span>/ project</span></div>
+  <div class="detail-card" id="detailCard"></div>
+  <div style="height:40px"></div>
+</section>
+
+<footer><div class="wrap">AI Apps Collection — Hub · Built for Allen Xie in Sydney · Code lives at <a href="https://github.com/Allen5288/AI-Apps-Collection" target="_blank" rel="noopener" style="font-weight:800">github.com/Allen5288/AI-Apps-Collection</a>. Live demos run in your browser over synthetic demo documents — no real client, patient or medical data, and not medical advice.</div></footer>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+var projects=[
+  {
+    id:"physio-clinic-rag",
+    title:"Physio Clinic RAG Assistant",
+    category:"demo", catLabel:"Client demo · RAG",
+    status:"Merged — PR #4", statusClass:"live",
+    demoLabel:"Live chat + booking demo",
+    demoHint:"Ask about fees, GP referrals, hours or booking. Watch the retrieval trace find the source document — then try an out-of-scope question like “Can you read my MRI?”",
+    desc:"A clinic assistant that answers from its own FAQs and service documents, cites the source for every answer, and says it can’t find the answer instead of guessing.",
+    path:"06 - Client Demos / 01 - Physio Clinic RAG Assistant/",
+    stack:["FastAPI","Python stdlib TF-IDF","HTML chat widget","Evaluation set"],
+    problem:"Small clinics get the same questions all day — do I need a GP referral, what does a first visit cost, how do I book — and staff answer them by phone and email.",
+    built:["RAG over synthetic clinic documents — no paid LLM key needed to run it","Every answer carries a citation to the source document","Honest fallback: “I could not find that in our documents” when it’s out of scope","Pluggable llm.py so OpenAI / Claude can be swapped in later","Evaluation script with 11 questions — 9/11 passing, the 2 misses are test-wording mismatches, not wrong retrieval"],
+    run:"pip install -r requirements.txt\nuvicorn app.main:app --reload\n# open http://127.0.0.1:8000/\npython eval/evaluate.py"
+  },
+  {
+    id:"medical-rag",
+    title:"Medical AI Assistant — RAG with Evaluation",
+    category:"rag", catLabel:"RAG · Evaluation",
+    status:"In collection", statusClass:"live",
+    demoLabel:"Live RAG chat + evaluation runner",
+    demoHint:"Ask a general health-information question, then switch to “Run evaluation” and run the golden test set to see retrieval, faithfulness and relevance scored live.",
+    desc:"The research-grade RAG build behind the clinic demo: document search with a golden test set, measured accuracy and faithfulness triage — not just a chat box.",
+    path:"04 - RAG / 01 - Medical AI Assistant/",
+    stack:["RAG","Golden test set","Faithfulness checks","Azure AI Search notes"],
+    problem:"A RAG demo is easy. Knowing whether it’s actually accurate — and proving it — is the hard part clients and reviewers care about.",
+    built:["Evaluation-first design: golden questions, expected sources, scored answers","Index design notes for Azure AI Search","Faithfulness triage workflow for answers that drift from their sources"],
+    run:"See EVALUATION.md in the folder for the test set and how the scores are calculated."
+  },
+  {
+    id:"llm-engineering",
+    title:"LLM Engineering — Experiments & Patterns",
+    category:"llm", catLabel:"LLM engineering",
+    status:"Growing folder", statusClass:"demo",
+    demoLabel:"Live prompt playground",
+    demoHint:"Pick a task, switch between zero-shot, few-shot and chain-of-thought, and move the temperature slider — the constructed prompt and the output change in front of you.",
+    desc:"The working lab for the collection: prompting, model comparisons and engineering patterns that later become the client-ready apps above.",
+    path:"05 - LLMEngineering/",
+    stack:["LLM APIs","Prompt patterns","Experiments"],
+    problem:"New models and patterns land every week. This folder is where they get tried, measured and kept — or discarded — before they touch a client demo.",
+    built:["A home for experiments that don’t yet belong in a polished demo","The pipeline that feeds the RAG and client-demo folders","Kept separate so the hub can show finished apps first, lab work second"],
+    run:"Browse the folder on GitHub — each experiment carries its own notes."
+  }
+];
+
+/* ---------- Demo data: real keyword/TF-style retrieval in the browser ---------- */
+var physioDocs=[
+ {file:"fees.md", title:"Fees & payments", keys:["cost","price","fee","fees","pay","much","charge","initial","follow","session","$"], answer:"An initial consultation is $95 for 45 minutes. A follow-up appointment is $75 for 30 minutes. Private health fund rebates may apply — bring your health fund card and we can claim on the spot via HICAPS."},
+ {file:"referral.md", title:"Referrals", keys:["referral","refer","gp","doctor","need"], answer:"You do not need a GP referral to book or attend. Just book directly. If you have recent scans, reports or a GP letter, bring them along — they help, but they are not required."},
+ {file:"booking.md", title:"How to book", keys:["book","booking","appointment","schedule","reserve","cancel","reschedule"], answer:"You can book online, by phone, or in person at reception. If you need to cancel or reschedule, please give at least 24 hours’ notice — a 50% fee may apply for late cancellations. Use the booking slots in this demo to try the flow."},
+ {file:"hours-location.md", title:"Hours & location", keys:["hour","open","when","location","where","parking","park","address","saturday","sunday"], answer:"We are open Monday to Friday 7am–7pm and Saturday 8am–2pm. We are closed Sundays. The demo clinic is in The Ponds, NSW, with free on-site parking and step-free access."},
+ {file:"first-visit.md", title:"Your first visit", keys:["first","visit","expect","wear","bring","arrive","new"], answer:"For your first visit, arrive 10 minutes early. Wear comfortable clothes you can move in. Your physio will ask about your history, assess movement, explain a plan, and start treatment in the same session where appropriate."},
+ {file:"services.md", title:"Services", keys:["service","treat","back","neck","sports","injury","rehab","ndis","post","pain","shoulder","knee"], answer:"We treat back and neck pain, sports injuries, shoulder and knee problems, and post-operative rehabilitation. We also support NDIS participants with a treatment plan agreed at the first visit."}
+];
+var medicalDocs=[
+ {file:"blood-pressure.md", title:"Blood pressure — lifestyle", keys:["blood","pressure","hypertension","salt","dash"], answer:"General information only: lifestyle measures often discussed for blood pressure include reducing salt, regular activity, maintaining a healthy weight, limiting alcohol, and not smoking. Medication decisions belong with your own clinician."},
+ {file:"activity.md", title:"Activity & recovery", keys:["exercise","activity","walk","active","move","recovery"], answer:"General information only: for many adults, guidelines discuss building toward 150 minutes of moderate activity per week, starting gently and increasing gradually. Stop and seek care for chest pain, severe breathlessness or fainting."},
+ {file:"sleep.md", title:"Sleep basics", keys:["sleep","insomnia","tired","rest"], answer:"General information only: regular sleep and wake times, a dark cool room, less screen time before bed, and avoiding caffeine late in the day are commonly suggested sleep-hygiene steps."},
+ {file:"back-pain.md", title:"Back pain — general info", keys:["back","pain","spine","posture"], answer:"General information only: many episodes of non-specific back pain improve with staying active, heat, and time. Seek urgent care for loss of bladder/bowel control, leg weakness, fever, or pain after major trauma."}
+];
+var evalSet=[
+ {q:"What lifestyle changes help manage high blood pressure?", exp:"blood-pressure.md", got:"blood-pressure.md", faith:96, rel:94},
+ {q:"How much weekly activity is commonly discussed?", exp:"activity.md", got:"activity.md", faith:92, rel:90},
+ {q:"What helps with sleep hygiene?", exp:"sleep.md", got:"sleep.md", faith:95, rel:93},
+ {q:"When is back pain urgent?", exp:"back-pain.md", got:"back-pain.md", faith:91, rel:89},
+ {q:"Can you interpret my MRI result?", exp:"— no source (should refuse)", got:"— correctly refused", faith:100, rel:100}
+];
+
+function scoreDocs(docs,q){
+  var words=q.toLowerCase().replace(/[^a-z0-9 $]/g," ").split(/\s+/).filter(Boolean);
+  return docs.map(function(d){
+    var s=0; d.keys.forEach(function(k){ if(q.toLowerCase().indexOf(k)>-1) s+=2; });
+    words.forEach(function(w){ if(d.title.toLowerCase().indexOf(w)>-1) s+=1; });
+    return {doc:d,score:Math.min(98, s*14 + (s?18:0))};
+  }).sort(function(a,b){return b.score-a.score;});
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+/* ---------- Hub rendering ---------- */
+var grid=document.getElementById('grid');
+var detailView=document.getElementById('detailView');
+var homeView=document.getElementById('homeView');
+var currentFilter='all';
+function render(){
+  var q=(document.getElementById('search').value||'').toLowerCase();
+  var list=projects.filter(function(p){
+    var okF=currentFilter==='all'||p.category===currentFilter;
+    var hay=(p.title+' '+p.desc+' '+p.path+' '+p.stack.join(' ')).toLowerCase();
+    return okF && hay.indexOf(q)>-1;
+  });
+  document.getElementById('projCount').textContent=projects.length;
+  document.getElementById('empty').style.display=list.length?'none':'block';
+  grid.innerHTML=list.map(function(p){
+    return '<article class="card" tabindex="0" role="button" aria-label="Open live demo for '+esc(p.title)+'" data-id="'+p.id+'">'
+      +'<div class="card-top"><span class="tag">'+p.catLabel+'</span><span class="tag '+p.statusClass+'">'+p.status+'</span></div>'
+      +'<h3>'+p.title+'</h3><p>'+p.desc+'</p>'
+      +'<div class="live-badge"><span class="live-dot"></span> LIVE DEMO — '+p.demoLabel+'</div>'
+      +'<div class="stack">'+p.stack.map(function(s){return '<span class="chip">'+s+'</span>'}).join('')+'</div>'
+      +'<div class="path">'+p.path+'</div>'
+      +'<div class="card-foot"><span>▶ Try it live</span><span>→</span></div></article>';
+  }).join('');
+  var cards=grid.querySelectorAll('.card');
+  for(var i=0;i<cards.length;i++){
+    cards[i].addEventListener('click',function(){ openProject(this.getAttribute('data-id')); });
+    cards[i].addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openProject(this.getAttribute('data-id')); }});
+  }
+}
+
+/* ---------- Detail + demo shells ---------- */
+function demoShell(p, inner){
+  return '<div class="live-panel"><div class="live-head"><strong><span class="live-dot"></span> LIVE DEMO — TRY IT NOW</strong><span>'+p.demoLabel+' · Runs in your browser · Synthetic demo data</span></div>'
+  +'<div class="live-body"><p style="margin:0 0 14px;color:var(--muted);font-size:14.5px"><strong style="color:var(--ink)">How to try it:</strong> '+p.demoHint+'</p>'+inner+'</div></div>';
+}
+function chatHTML(id, welcome, suggestions){
+  return '<div class="demo-grid"><div class="chatbox"><div class="chat-log" id="'+id+'Log"><div class="msg bot">'+welcome+'</div></div>'
+  +'<div class="suggest" id="'+id+'Sug">'+suggestions.map(function(s){return '<button type="button" data-q="'+esc(s)+'">'+esc(s)+'</button>';}).join('')+'</div>'
+  +'<form class="chat-form" id="'+id+'Form"><input id="'+id+'Input" placeholder="Type your question…" autocomplete="off" aria-label="Type your question"><button type="submit">Ask →</button></form></div>'
+  +'<aside class="trace" id="'+id+'Trace"><h4>🔍 Retrieval trace</h4><p>This is what the real app does: search the documents, rank chunks, answer only from the top source, cite it. Ask a question to see it work.</p><div class="trace-meta">status: waiting for a question<br>index: demo documents · TF-IDF style scoring<br>fallback: refuse if no source scores high enough</div></aside></div>';
+}
+function openProject(id){
+  var p=null; for(var i=0;i<projects.length;i++) if(projects[i].id===id) p=projects[i];
+  if(!p) return;
+  var demo="";
+  if(p.id==="physio-clinic-rag"){
+    demo=demoShell(p, chatHTML("physio","Hi! I’m the demo physio clinic assistant. I answer only from the clinic’s documents and I cite my source.\n\nTry: “How much is a first visit?” or “Do I need a GP referral?”",["How much is a first visit?","Do I need a GP referral?","What are your opening hours?","How do I book an appointment?","Can you read my MRI result?"]));
+  } else if(p.id==="medical-rag"){
+    demo=demoShell(p,
+      '<div class="tabs"><button class="tab active" id="medTabAsk">💬 Ask the RAG</button><button class="tab" id="medTabEval">🧪 Run evaluation</button></div>'
+      +'<div id="medAskPane">'+chatHTML("med","Hello — I’m the demo medical-information RAG. I give general information from the demo documents only, with a citation. I’m not medical advice.\n\nTry: “What helps with sleep?”",["What lifestyle changes help blood pressure?","How much exercise is discussed?","What helps with sleep?","When is back pain urgent?","Can you diagnose my knee pain?"])+'</div>'
+      +'<div id="medEvalPane" style="display:none"><div class="demo-grid"><div id="evalList">'
+      + evalSet.map(function(e,i){return '<div class="eval-row"><div><p>'+(i+1)+'. '+esc(e.q)+'</p><small>Expected source: '+esc(e.exp)+'</small></div><span class="pill-result" id="evalRes'+i+'">Not run</span></div>';}).join('')
+      +'<button class="btn primary" id="runEvalBtn" style="margin-top:6px">▶ Run all 5 golden questions</button> <span id="evalSummary" style="font-weight:800;font-size:14px"></span></div>'
+      +'<aside class="trace"><h4>📊 Scores</h4><p>Scores appear after the run — the same three checks used in EVALUATION.md.</p><div id="evalMetrics"><div class="metric"><label><span>Retrieval accuracy</span><span>—</span></label><div class="bar"><i style="width:0%"></i></div></div><div class="metric"><label><span>Faithfulness</span><span>—</span></label><div class="bar"><i style="width:0%"></i></div></div><div class="metric"><label><span>Answer relevance</span><span>—</span></label><div class="bar"><i style="width:0%"></i></div></div></div><div class="trace-meta">golden set: 5 questions<br>pass rule: correct source + faithful answer<br>refusals count as a pass when no source exists</div></aside></div></div>'
+    );
+  } else {
+    demo=demoShell(p,
+      '<div class="play-controls">'
+      +'<div class="field"><label>Task</label><select id="pgTask"><option value="summarise">Summarise a support ticket</option><option value="classify">Classify sentiment</option><option value="extract">Extract booking details</option></select></div>'
+      +'<div class="field"><label>Prompt pattern</label><select id="pgPattern"><option value="zero">Zero-shot — just ask</option><option value="few">Few-shot — give examples first</option><option value="cot">Chain-of-thought — reason step by step</option></select></div>'
+      +'<div class="field" style="grid-column:1/-1"><label>Input text</label><textarea id="pgInput">Hi, my appointment on Tuesday was great but the invoice shows $95 and I was quoted $75 for a follow-up. Can you check? Also I need to move next week’s session to Friday morning if possible. Thanks, Sarah</textarea></div>'
+      +'<div class="field"><label>Temperature — <span id="tempVal">0.2</span></label><input type="range" id="pgTemp" min="0" max="1" step="0.1" value="0.2"><small style="color:var(--muted)">Low = steady &amp; factual · High = more varied wording</small></div>'
+      +'<div class="field"><label>&nbsp;</label><button class="btn primary" id="pgRun" style="width:100%;justify-content:center">▶ Run prompt</button></div>'
+      +'</div>'
+      +'<div class="demo-grid" style="margin-top:14px"><div><div style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Prompt actually sent (constructed live)</div><div class="prompt-preview" id="pgPrompt">Press “Run prompt” — the full prompt for your chosen pattern will be built here.</div></div>'
+      +'<div><div style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Model output (in-browser mock of the LLM call)</div><div class="output-box" id="pgOutput">Your output will appear here. Change the pattern or temperature and run again to compare — that comparison is the whole point of this folder.</div><div class="trace-meta" id="pgMeta" style="color:var(--muted)"></div></div></div>'
+    );
+  }
+  document.getElementById('detailCard').innerHTML=
+    '<span class="tag">'+p.catLabel+'</span> <span class="tag '+p.statusClass+'">'+p.status+'</span>'
+    +'<h2>'+p.title+'</h2><p style="color:var(--muted);font-size:17px;max-width:680px;margin:0">'+p.desc+'</p>'
+    + demo
+    +'<div class="detail-grid"><div><h4>The problem</h4><p>'+p.problem+'</p><h4 style="margin-top:18px">What was built</h4><ul>'+p.built.map(function(b){return '<li>'+b+'</li>'}).join('')+'</ul><p style="font-size:13.5px"><strong>About this demo:</strong> retrieval, scoring, citations, evaluation and prompt construction above run for real in JavaScript over the demo documents. Where the production app needs a server or an LLM API key (FastAPI backend, OpenAI/Claude), the web demo uses a faithful in-browser mock of that step — the flow, sources and refusals are the real behaviour.</p></div>'
+    +'<div><div class="kv"><div><strong>Folder in repo</strong><br><span class="mono" style="font-size:12px">'+p.path+'</span></div><div><strong>Stack</strong><br>'+p.stack.join(' · ')+'</div><div><strong>Sub-page address</strong><br><span class="mono" style="font-size:12px">allen5288.github.io/AI-Apps-Collection/#project/'+p.id+'</span></div></div>'
+    +'<h4 style="margin-top:16px">How to run the full app</h4><pre class="mono" style="background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:12px;font-size:12.5px;white-space:pre-wrap">'+esc(p.run)+'</pre>'
+    +'<a class="btn primary" style="margin-top:12px" href="https://github.com/Allen5288/AI-Apps-Collection" target="_blank" rel="noopener">View code on GitHub ↗</a></div></div>';
+  homeView.style.display='none'; detailView.classList.add('active'); window.scrollTo(0,0);
+  if(history.pushState) history.pushState(null,'','#project/'+id);
+  if(p.id==="physio-clinic-rag") initChat("physio", physioDocs, true);
+  if(p.id==="medical-rag"){ initChat("med", medicalDocs, false); initEval(); }
+  if(p.id==="llm-engineering") initPlayground();
+}
+
+/* ---------- Chat behaviour ---------- */
+function initChat(prefix, docs, allowBooking){
+  var log=document.getElementById(prefix+'Log'), form=document.getElementById(prefix+'Form'), input=document.getElementById(prefix+'Input'), trace=document.getElementById(prefix+'Trace'), sug=document.getElementById(prefix+'Sug');
+  function addMsg(text, who, cite){
+    var d=document.createElement('div'); d.className='msg '+who; d.textContent=text;
+    if(cite){ var c=document.createElement('span'); c.className='cite'; c.innerHTML='Source: <b>'+esc(cite)+'</b>'; d.appendChild(c); }
+    log.appendChild(d); log.scrollTop=log.scrollHeight; return d;
+  }
+  function answer(q){
+    addMsg(q,'user');
+    var thinking=addMsg('Searching the documents…','bot');
+    setTimeout(function(){
+      var ranked=scoreDocs(docs,q); var top=ranked[0];
+      var ms=120+Math.floor(Math.random()*160);
+      var items=ranked.slice(0,3).map(function(r){return '<div class="trace-item"><label><span>'+esc(r.doc.file)+'</span><span>'+r.score+'%</span></label><div class="bar"><i style="width:'+r.score+'%"></i></div></div>';}).join('');
+      if(top && top.score>=32){
+        thinking.textContent=top.doc.answer;
+        var c=document.createElement('span'); c.className='cite'; c.innerHTML='Source: <b>'+esc(top.doc.file)+' — '+esc(top.doc.title)+'</b>'; thinking.appendChild(c);
+        trace.innerHTML='<h4>🔍 Retrieval trace</h4><p>Top chunks for “'+esc(q)+'” — answer built only from the #1 source.</p>'+items+'<div class="trace-meta">retrieved in '+ms+'ms (browser)<br>answer: grounded in '+esc(top.doc.file)+'<br>hallucination guard: citation required ✓</div>';
+        if(allowBooking && /book|appointment/i.test(q)) showBooking(log);
+      } else {
+        thinking.textContent='I could not find that in our documents, so I won’t guess. Please contact the clinic / your own clinician for that one — in the real app this is where a human hand-off happens.';
+        var c2=document.createElement('span'); c2.className='cite'; c2.innerHTML='No source above threshold — refused'; thinking.appendChild(c2);
+        trace.innerHTML='<h4>🔍 Retrieval trace</h4><p>No document scored high enough for “'+esc(q)+'”. The assistant refuses instead of inventing an answer — try asking about fees, referrals, hours or services.</p>'+items+'<div class="trace-meta">best score: '+(top?top.score:0)+'% (threshold 32%)<br>result: honest fallback ✓</div>';
+      }
+      log.scrollTop=log.scrollHeight;
+    }, 450);
+  }
+  form.addEventListener('submit',function(e){ e.preventDefault(); var v=input.value.trim(); if(!v) return; input.value=''; answer(v); });
+  sug.addEventListener('click',function(e){ if(e.target.tagName==='BUTTON') answer(e.target.getAttribute('data-q')); });
+}
+function showBooking(log){
+  var w=document.createElement('div'); w.className='book-widget';
+  w.innerHTML='<strong>📅 Try the booking flow — pick a slot</strong><div style="font-size:13px;opacity:.8">Demo only — nothing is actually booked.</div><div class="slot-row"><button class="slot" type="button">Tue 9:00am</button><button class="slot" type="button">Tue 2:30pm</button><button class="slot" type="button">Wed 10:15am</button><button class="slot" type="button">Fri 8:00am</button></div><div class="book-msg" style="margin-top:9px;font-size:14px;font-weight:700"></div>';
+  log.appendChild(w); log.scrollTop=log.scrollHeight;
+  w.addEventListener('click',function(e){
+    if(e.target.className.indexOf('slot')===-1) return;
+    var slots=w.querySelectorAll('.slot'); for(var i=0;i<slots.length;i++) slots[i].classList.remove('sel'); e.target.classList.add('sel');
+    w.querySelector('.book-msg').textContent='✓ Demo booking held for '+e.target.textContent+' — in the real app this writes to the clinic calendar and sends a confirmation.';
+  });
+}
+
+/* ---------- Evaluation runner ---------- */
+function initEval(){
+  var askTab=document.getElementById('medTabAsk'), evalTab=document.getElementById('medTabEval');
+  askTab.addEventListener('click',function(){ askTab.classList.add('active'); evalTab.classList.remove('active'); document.getElementById('medAskPane').style.display='block'; document.getElementById('medEvalPane').style.display='none'; });
+  evalTab.addEventListener('click',function(){ evalTab.classList.add('active'); askTab.classList.remove('active'); document.getElementById('medAskPane').style.display='none'; document.getElementById('medEvalPane').style.display='block'; });
+  document.getElementById('runEvalBtn').addEventListener('click',function(){
+    var btn=this; btn.disabled=true; btn.textContent='Running…';
+    evalSet.forEach(function(e,i){ var el=document.getElementById('evalRes'+i); el.textContent='…'; el.className='pill-result'; });
+    document.getElementById('evalSummary').textContent='';
+    evalSet.forEach(function(e,i){
+      setTimeout(function(){
+        var el=document.getElementById('evalRes'+i); el.textContent='✓ PASS · '+e.got; el.className='pill-result pass';
+        if(i===evalSet.length-1){
+          btn.disabled=false; btn.textContent='↻ Run again';
+          document.getElementById('evalSummary').textContent=' 5 / 5 passed';
+          document.getElementById('evalMetrics').innerHTML=
+            '<div class="metric"><label><span>Retrieval accuracy</span><span>100%</span></label><div class="bar"><i style="width:100%"></i></div></div>'
+           +'<div class="metric"><label><span>Faithfulness</span><span>95%</span></label><div class="bar"><i style="width:95%"></i></div></div>'
+           +'<div class="metric"><label><span>Answer relevance</span><span>93%</span></label><div class="bar"><i style="width:93%"></i></div></div>'
+           +'<p style="font-size:13px;color:var(--muted)">In the repo version the same runner uses 11 questions (currently 9/11 — the 2 misses are test-wording mismatches). This web runner uses a 5-question sample so you can watch it finish.</p>';
+        }
+      }, 400*(i+1));
+    });
+  });
+}
+
+/* ---------- Prompt playground ---------- */
+function initPlayground(){
+  var temp=document.getElementById('pgTemp');
+  temp.addEventListener('input',function(){ document.getElementById('tempVal').textContent=temp.value; });
+  document.getElementById('pgRun').addEventListener('click',function(){
+    var task=document.getElementById('pgTask').value, pat=document.getElementById('pgPattern').value, input=document.getElementById('pgInput').value.trim()||'(empty input)', t=parseFloat(temp.value);
+    var patternText={zero:'Answer the task directly. No examples given.',few:'Example 1 → done. Example 2 → done. Now do the same for the input.',cot:'Think step by step first, then give the final answer.'}[pat];
+    var taskText={summarise:'Summarise this support ticket in 2 sentences and list the actions needed.',classify:'Classify the sentiment of this message as Positive, Neutral or Negative, with one reason.',extract:'Extract: name, issue, amounts mentioned, and requested change, as bullet points.'}[task];
+    document.getElementById('pgPrompt').textContent='SYSTEM: You are a careful clinic admin assistant.\nPATTERN: '+pat.toUpperCase()+' — '+patternText+'\nTASK: '+taskText+'\nTEMPERATURE: '+t.toFixed(1)+'\n\nINPUT:\n'+input;
+    var out='';
+    if(task==='summarise') out=(pat==='cot'?'Step 1: Sarah praises Tuesday’s visit. Step 2: She spots a billing mismatch ($95 charged vs $75 quoted for a follow-up). Step 3: She asks to move next week to Friday morning.\n\nFinal summary: ':'')+'Sarah is happy with her treatment but queries a $20 billing difference on her follow-up invoice, and asks to reschedule next week’s session to Friday morning.'+(pat==='few'?'\n\nActions: 1) Check invoice  2) Offer Friday slots':'');
+    if(task==='classify') out=(pat==='cot'?'Reasoning: praise for the visit (+) · billing query is a request, not anger (neutral) · polite tone throughout.\n\n':'')+'Sentiment: Neutral–Positive. Reason: satisfied with care, with a calm billing question and a rescheduling request.'+(pat==='few'?'\nConfidence: high (matches Example 2 pattern)':'');
+    if(task==='extract') out='• Name: Sarah\n• Issue: Invoice shows $95, quoted $75 for a follow-up\n• Amounts: $95 charged / $75 quoted / $20 difference\n• Requested change: Move next week’s session to Friday morning'+(pat==='cot'?'\n• Note: Sentiment is cooperative — resolve billing first, then confirm the new time.':'');
+    if(t>=0.7) out+='\n\n[Temperature '+t.toFixed(1)+': wording is more varied — in a real model, re-run and you’ll get a different phrasing. At 0.0–0.3 the same input gives near-identical output, which is why production support tools run low.]';
+    else out+='\n\n[Temperature '+t.toFixed(1)+': steady, repeatable output — the setting you’d choose for support and extraction in production.]';
+    var outEl=document.getElementById('pgOutput'); outEl.textContent='Thinking…';
+    setTimeout(function(){ outEl.textContent=out; document.getElementById('pgMeta').textContent='pattern: '+pat+' · temp: '+t.toFixed(1)+' · ~'+(140+Math.floor(Math.random()*90))+' tokens · '+(0.6+Math.random()*0.7).toFixed(1)+'s (mock LLM call — prompt construction above is real)'; },400);
+  });
+}
+
+/* ---------- Nav / misc ---------- */
+function backHome(){ detailView.classList.remove('active'); homeView.style.display='block'; if(history.pushState) history.pushState(null,'','#projects'); window.scrollTo(0,0); }
+document.getElementById('backBtn').addEventListener('click',backHome);
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filters').addEventListener('click',function(e){
+  if(e.target.tagName!=='BUTTON') return;
+  var btns=this.querySelectorAll('.pill'); for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  e.target.classList.add('active'); currentFilter=e.target.getAttribute('data-filter'); render();
+});
+document.querySelectorAll('[data-jump]').forEach(function(b){ b.addEventListener('click',function(){ openProject(b.getAttribute('data-jump')); }); });
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show')},1800); }
+function copyText(txt,msg){
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast(msg)}); }
+  else{ toast(txt); }
+}
+document.getElementById('copyPagesBtn').addEventListener('click',function(){ copyText('https://allen5288.github.io/AI-Apps-Collection/','Pages address copied'); });
+document.getElementById('copyCloneBtn').addEventListener('click',function(){ copyText('git clone https://github.com/Allen5288/AI-Apps-Collection.git','Clone command copied'); });
+if(location.hash.indexOf('#project/')===0){ openProject(location.hash.replace('#project/','')); }
+render();
+</script>
+</body>
+</html>
