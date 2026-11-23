@@ -349,3 +349,85 @@ trade-off, not a guess: ~5x the token cost per question, plus a
 fixed search tier, in exchange for a managed stack. The swap ships
 only if the golden set scores from Parts 2 and 3 hold — a cheaper
 answer that is less faithful is not a saving.
+## 2026-11-24 — Part 5: Day 3 — the generation swap to Azure OpenAI
+
+Days 1 and 2 prepared the swap: the Azure AI Search index design (Part 3) and the cost model (Part 4). Day 3 is the swap itself — generation moves from Groq LLaMA 3 70B to Azure OpenAI GPT-4o. The rule for a fair comparison: change one thing at a time. Retrieval stays exactly as it is, the prompt stays exactly as it is, only the model behind `generate_answer` changes. If the scores move, the model moved them.
+
+### The swap — save as `generation.py`
+
+One function, one switch. The provider is chosen by environment, not by editing code, so the same code runs the baseline and the swap:
+
+```python
+# generation.py — the only place that knows which LLM answers.
+#   PROVIDER=groq  -> Groq LLaMA 3 70B (current stack, the baseline)
+#   PROVIDER=azure -> Azure OpenAI GPT-4o (the swap)
+# Keys live in the environment, never in this file.
+import os
+
+SYSTEM_PROMPT = (
+    "Answer only from the retrieved chunks below. "
+    "Every factual claim must come from a chunk — if the chunks do not "
+    "contain the answer, say so. Add the disclaimer: "
+    "\"This is general information, not a diagnosis.\" "
+    "Cite the chunk each claim comes from."
+)
+
+def generate_answer(question: str, chunks: list[str], provider: str | None = None) -> str:
+    provider = provider or os.environ.get("PROVIDER", "groq")
+    context = "\n\n".join(f"[chunk {i + 1}] {c}" for i, c in enumerate(chunks))
+    prompt = f"{SYSTEM_PROMPT}\n\n{context}\n\nQuestion: {question}"
+    if provider == "azure":
+        from openai import AzureOpenAI
+        client = AzureOpenAI(
+            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+            api_key=os.environ["AZURE_OPENAI_API_KEY"],
+            api_version="2024-10-21",
+        )
+        reply = client.chat.completions.create(
+            model=os.environ["AZURE_OPENAI_DEPLOYMENT"],  # your GPT-4o deployment name
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,  # evaluation needs deterministic answers
+            max_tokens=400,
+        )
+    elif provider == "groq":
+        from groq import Groq
+        client = Groq(api_key=os.environ["GROQ_API_KEY"])
+        reply = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=400,
+        )
+    else:
+        raise ValueError(f"Unknown provider: {provider}")
+    return reply.choices[0].message.content
+```
+
+Why `temperature=0` and a 400-token cap: evaluation needs deterministic, comparable answers, and a cap stops a rambling answer from inventing claims the faithfulness check then has to catch. Both are evaluation settings, not product settings — a production chat can raise them later, but the golden set is always run at 0.
+
+### What stays the same, on purpose
+
+- **Retrieval is untouched.** Same chunks, same order, same `tenant_id` filter — so Recall@5 must be identical between the two runs. If it is not, something else changed and the comparison is invalid.
+- **The prompt is identical.** The system prompt, the chunk format, the disclaimer — byte for byte. A different prompt is a different experiment.
+- **The golden set and rubric are identical.** Same 20 questions (Part 2), same human rubric (Part 3), same judge (Part 4).
+
+### The swap procedure
+
+1. **Baseline:** `PROVIDER=groq python eval/run_eval.py --out eval/runs/2026-11-24-groq.json` — record the row.
+2. **Swap:** `PROVIDER=azure python eval/run_eval.py --out eval/runs/2026-11-24-azure.json` — record the row next to it.
+3. **Compare, same table:**
+
+| Run | Recall@5 | Faithfulness failures | Judge agreement | Cost / 100 questions |
+|---|---|---|---|---|
+| Groq + Pinecone (baseline) | | | | ~$0.12 |
+| Azure GPT-4o + AI Search | | | | ~$0.60 + $75/mo |
+
+### The decision gate — ship, or stay
+
+- **Ship the swap** only if faithfulness failures stay at 0 and judge agreement stays ≥ 0.85 — the Azure answers are no worse than the Groq answers on the same questions.
+- **Stay on Groq** if either number drops. A cheaper-per-token model that invents medical claims is not a saving, and a more expensive model that answers worse is not an upgrade. The fix is then the prompt or the chunks, not the provider — re-run until the Azure row matches, or keep Groq generation and take only the Azure search tier if that is what the project needs.
+- **Recall@5 must not move.** It measures retrieval, which did not change. If it moves, stop — the experiment is broken, not the model.
+
+### What this finishes
+
+The Azure swap is now complete: Day 1, the search index (Part 3); Day 2, the cost model (Part 4); Day 3, generation (this part). The Medical AI Assistant case is finished — it runs end-to-end on either stack, is measured by the same golden set on both, and the swap decision is a comparison of two rows, not an opinion. The next case in this repo starts on the next pick.
