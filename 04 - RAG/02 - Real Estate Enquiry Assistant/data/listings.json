@@ -1,0 +1,128 @@
+[
+    {
+        "address": "12 Banksia Way",
+        "agent": "Sarah Chen",
+        "baths": 2,
+        "beds": 4,
+        "description": "Near-new four bedroom family home on a quiet street, five minutes walk to The Ponds High School. Open-plan kitchen and living, ducted air conditioning, 6.6kW solar, covered alfresco and a low-maintenance backyard.",
+        "features": [
+            "ducted air conditioning",
+            "solar panels",
+            "alfresco",
+            "near school",
+            "quiet street"
+        ],
+        "id": "HB-001",
+        "inspection": "Saturday 28 Nov 2026, 10:00-10:30am",
+        "parking": 2,
+        "price": 1150000,
+        "price_type": "sale",
+        "status": "sale",
+        "suburb": "The Ponds",
+        "type": "house"
+    },
+    {
+        "address": "8 Wattle Grove",
+        "agent": "Marcus Lee",
+        "baths": 2,
+        "beds": 3,
+        "description": "Renovated three bedroom house with a new kitchen, timber floors and a north-facing backyard. Walking distance to Kellyville station and local shops.",
+        "features": [
+            "renovated kitchen",
+            "timber floors",
+            "near station",
+            "north-facing"
+        ],
+        "id": "HB-002",
+        "inspection": "Saturday 28 Nov 2026, 11:00-11:30am",
+        "parking": 2,
+        "price": 1280000,
+        "price_type": "sale",
+        "status": "sale",
+        "suburb": "Kellyville",
+        "type": "house"
+    },
+    {
+        "address": "5/45 Church Street",
+        "agent": "Sarah Chen",
+        "baths": 1,
+        "beds": 2,
+        "description": "Bright two bedroom apartment with a balcony, air conditioning and a secure car space, two minutes walk to Parramatta station. Available now, pets considered on application.",
+        "features": [
+            "air conditioning",
+            "balcony",
+            "near station",
+            "pets considered"
+        ],
+        "id": "HB-003",
+        "inspection": "Wednesday 26 Nov 2026, 5:30-6:00pm",
+        "parking": 1,
+        "price": 620,
+        "price_type": "rent per week",
+        "status": "rent",
+        "suburb": "Parramatta",
+        "type": "apartment"
+    },
+    {
+        "address": "21 Enmore Road",
+        "agent": "Priya Nair",
+        "baths": 2,
+        "beds": 3,
+        "description": "Inner-west townhouse with high ceilings, a chef's kitchen and a sunny courtyard. Ten minutes walk to Newtown station and King Street cafes.",
+        "features": [
+            "chef's kitchen",
+            "courtyard",
+            "near station",
+            "high ceilings"
+        ],
+        "id": "HB-004",
+        "inspection": "Saturday 28 Nov 2026, 12:00-12:30pm",
+        "parking": 1,
+        "price": 1650000,
+        "price_type": "sale",
+        "status": "sale",
+        "suburb": "Newtown",
+        "type": "townhouse"
+    },
+    {
+        "address": "3/88 Campbell Parade",
+        "agent": "Marcus Lee",
+        "baths": 1,
+        "beds": 2,
+        "description": "Light-filled two bedroom apartment one street back from Bondi Beach, with ocean glimpses from the living room, a renovated bathroom and a shared laundry. Pet friendly, available 5 December.",
+        "features": [
+            "near beach",
+            "pet friendly",
+            "renovated bathroom",
+            "ocean glimpses"
+        ],
+        "id": "HB-005",
+        "inspection": "Thursday 27 Nov 2026, 6:00-6:30pm",
+        "parking": 0,
+        "price": 950,
+        "price_type": "rent per week",
+        "status": "rent",
+        "suburb": "Bondi Beach",
+        "type": "apartment"
+    },
+    {
+        "address": "14 Archer Street",
+        "agent": "Priya Nair",
+        "baths": 1,
+        "beds": 1,
+        "description": "Neat one bedroom apartment with a study nook and a car space, five minutes walk to Chatswood station and Westfield. Ideal first rental, available now.",
+        "features": [
+            "study nook",
+            "near station",
+            "near shops"
+        ],
+        "id": "HB-006",
+        "inspection": "Wednesday 26 Nov 2026, 6:00-6:30pm",
+        "parking": 1,
+        "price": 540,
+        "price_type": "rent per week",
+        "status": "rent",
+        "suburb": "Chatswood",
+        "type": "apartment"
+    }
+]
