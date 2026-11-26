@@ -46,7 +46,7 @@ real export by keeping the same fields.
 | description, features | What the retriever searches |
 | agent | Who the enquiry goes to |
 
-## Run it (day 2 — ask endpoint)
+## Run it (day 3 — ask + enquiries)
 
 ```bash
 cd "04 - RAG/02 - Real Estate Enquiry Assistant"
@@ -105,9 +105,79 @@ needs FastAPI + uvicorn (see `requirements.txt`).
 2. **Ask endpoint (this commit):** FastAPI server, `POST /ask` —
    retrieve, compose a grounded answer with citations +
    "not in our listings" fallback. No LLM key needed yet.
-3. **Enquiry capture:** `POST /enquiries` — name, phone, listing,
+3. **Enquiry capture (done 2026-11-27):** `POST /enquiries` — name, phone, listing,
    inspection time; stored as JSON; duplicate guard by phone+listing.
 4. **Evaluation:** golden set + faithfulness check, reusing the
    Medical AI Assistant's eval pattern; cost per 100 questions.
 5. **Provider swap + ship checklist:** Groq → Azure OpenAI via the
    provider abstraction; README runbook; case finished.
+
+## 2026-11-27 — Enquiry capture (commit 3 of 5)
+
+The ask endpoint answers questions; today the assistant also
+collects the enquiry, so the conversation ends with a callback
+instead of a dead end.
+
+### The endpoints
+
+```bash
+curl -X POST http://127.0.0.1:8000/enquiries \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alex Chen", "phone": "0400 000 000",
+       "listing_id": "HB-001",
+       "inspection": "Saturday 28 Nov 2026, 10:00-10:30am",
+       "message": "Is the house pet friendly?"}'
+# -> 201 + the stored enquiry (id, status "new", listing address
+#    and agent name snapshotted in)
+
+curl -X POST http://127.0.0.1:8000/enquiries \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alex Chen", "phone": "0400 000 000",
+       "listing_id": "HB-001",
+       "inspection": "Saturday 28 Nov 2026, 10:00-10:30am"}'
+# -> 409 + the existing enquiry id (same phone, same listing)
+
+curl "http://127.0.0.1:8000/enquiries?status=new"
+# -> agent view: every new enquiry, with listing + inspection
+```
+
+### What is validated, and why each check exists
+
+| Check | Why it exists |
+|---|---|
+| Name 2–100 chars | A callback needs a name; an empty name is a row the agent cannot use |
+| Phone is an Australian mobile (`04XX XXX XXX` or `+61 4XX XXX XXX`) | The agent calls back on a mobile. A landline or a typo'd number is a dead enquiry — rejected now, not discovered on Monday |
+| Listing id must exist | An enquiry for a property the agency does not have is a wasted call |
+| Inspection must match the listing's inspection time | Booking someone into an inspection that does not exist is a no-show for the buyer and an empty open house for the agent |
+| Message ≤ 500 chars | Keeps the record small; a novel belongs in the call, not the form |
+
+A failed check returns 422 with a message saying what is wrong,
+so the assistant that collected the details can fix them and retry
+instead of dropping the enquiry.
+
+### Duplicate guard: one callback per person per property
+
+The same phone enquiring twice about the same listing returns 409
+with the existing enquiry id — the agent calls once, not twice.
+The guard is phone + listing, not phone alone: the same person
+enquiring about two different properties is two genuine enquiries.
+The stored record snapshots the listing address and agent name, so
+the enquiry still says which property it was about even if the
+listing changes later.
+
+### Storage: a JSON file, on purpose
+
+`data/enquiries.json`, atomic writes (temp file + rename), same
+pattern as the BookingApi store. A missing file means first run; a
+corrupt file logs a warning and starts empty, leaving the corrupt
+file for a human to inspect. A file is the right store at dozens of
+enquiries a day; the record shape is the seam — when the agency
+outgrows it, the same records move to SQLite without changing the
+endpoints.
+
+### What is still missing (commit 4–5)
+
+- Evaluation: a golden set for the ask endpoint + a faithfulness
+  check on the answers, reusing the Medical AI Assistant's pattern.
+- The provider swap (commit 5): Groq → Azure OpenAI via the
+  provider abstraction, then the ship checklist.
