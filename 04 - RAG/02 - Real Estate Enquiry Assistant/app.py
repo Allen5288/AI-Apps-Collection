@@ -7,14 +7,22 @@ needed yet — the answer is composed from the retrieved listings
 themselves, and the provider call lands in commit 5 behind the
 same response shape.
 
+POST /enquiries captures an inspection enquiry (see enquiries.py):
+name, phone, listing and inspection time, stored as JSON with a
+duplicate guard by phone + listing, so the listing agent gets one
+callback per person per property.
+
 Run:
     pip install -r requirements.txt
     uvicorn app:app --reload        # -> http://127.0.0.1:8000/docs
 
 Try:
-    curl -X POST http://127.0.0.1:8000/ask \
-      -H "Content-Type: application/json" \
+    curl -X POST http://127.0.0.1:8000/ask \\
+      -H "Content-Type: application/json" \\
       -d '{"question": "3 bed house in The Ponds under $1.2m"}'
+    curl -X POST http://127.0.0.1:8000/enquiries \\
+      -H "Content-Type: application/json" \\
+      -d '{"name": "Alex Chen", "phone": "0400 000 000", "listing_id": "HB-001", "inspection": "Saturday 28 Nov 2026, 10:00-10:30am"}'
     curl http://127.0.0.1:8000/health
 """
 
@@ -23,9 +31,15 @@ from __future__ import annotations
 import json
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from answer import compose_answer
+from enquiries import (
+    create_enquiry,
+    load_enquiries,
+    validate_enquiry,
+)
 from retrieval import DATA_PATH, Retriever
 
 app = FastAPI(title="Real Estate Enquiry Assistant")
@@ -72,6 +86,14 @@ class AskResponse(BaseModel):
     fallback: bool
 
 
+class EnquiryRequest(BaseModel):
+    name: str
+    phone: str
+    listing_id: str
+    inspection: str
+    message: str | None = None
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "listings": len(RETRIEVER.listings)}
@@ -97,3 +119,43 @@ def ask(body: AskRequest) -> AskResponse:
         citations=composed["citations"],
         fallback=composed["fallback"],
     )
+
+
+@app.post("/enquiries", status_code=201)
+def create_enquiry_endpoint(body: EnquiryRequest):
+    """Capture an inspection enquiry. 201 with the stored record;
+    409 when this phone already enquired about this listing; 422
+    when the name, phone, listing or inspection does not check out.
+    The 422 message says what is wrong — the caller (and the
+    assistant that collected the details) can fix it and retry."""
+    try:
+        cleaned = validate_enquiry(
+            body.model_dump(), RETRIEVER.listings
+        )
+    except ValueError as exc:
+        return JSONResponse(
+            status_code=422, content={"detail": str(exc)}
+        )
+    enquiries = load_enquiries()
+    record, created = create_enquiry(cleaned, enquiries)
+    if not created:
+        return JSONResponse(
+            status_code=409,
+            content={
+                "detail": "an enquiry from this phone already exists "
+                f"for {cleaned['listing_id']}",
+                "enquiry_id": record["id"],
+            },
+        )
+    return record
+
+
+@app.get("/enquiries")
+def list_enquiries(status: str | None = None) -> dict:
+    """Agent view: all enquiries, optionally filtered by status
+    (`?status=new`). The agent works through the `new` ones and
+    marks them contacted outside this API for now."""
+    enquiries = load_enquiries()
+    if status is not None:
+        enquiries = [e for e in enquiries if e["status"] == status]
+    return {"enquiries": enquiries}
