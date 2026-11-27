@@ -244,10 +244,11 @@ which runs the same retriever + composer code minus the HTTP layer.
 
 | Gate | Result |
 |---|---|
-| Mean Recall@3 (10 answerable) | _fill in after running_ |
-| Top-1 correct | _fill in after running_ |
-| Fallback correct | _fill in after running_ |
-| Faithfulness failures | _fill in after running_ |
+| Mean Recall@3 (10 answerable) | 1.00 |
+| Top-1 correct | 10/10 |
+| Fallback correct | 1/2 |
+| Faithfulness failures | 2 |
+> Baseline: 1 of 3 gates passed — Recall@3 1.00 passed; fallback 1/2 and 2 faithfulness failures, both on the question "does the agency manage commercial offices in the Sydney CBD", which retrieved HB-001 instead of falling back.
 
 > Note: the numbers above are filled in from the first run of
 > `python eval/run_eval.py` — the script and golden set are written
