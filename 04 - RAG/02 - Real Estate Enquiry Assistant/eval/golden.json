@@ -1,0 +1,148 @@
+{
+  "_meta": {
+    "notes": "12 questions against the 6 synthetic listings in data/listings.json. 10 answerable (expected = the listing the question is about), 2 fallback (no such property — the correct answer is 'I could not find a listing...'). Questions reuse words from the target listing's own text, so they clear the MIN_SCORE = 0.15 bar the README measured (genuine questions score 0.19+, unrelated tops out at 0.09). The fallback questions deliberately avoid 'bedroom', digits and property words: 'castle with a moat' is the README's own measured example, and the offices question shares almost no tokens with any listing.",
+    "suggested_pr_title": "Real Estate Enquiry Assistant: evaluation golden set + eval script (4 of 5)",
+    "target": "Allen5288/AI-Apps-Collection — 04 - RAG/02 - Real Estate Enquiry Assistant/eval/golden.json"
+  },
+  "questions": [
+    {
+      "expected": [
+        "HB-001"
+      ],
+      "must_not": [
+        "Kellyville",
+        "8 Wattle Grove",
+        "$1,280,000"
+      ],
+      "question": "4 bedroom family house in The Ponds with solar panels"
+    },
+    {
+      "expected": [
+        "HB-002"
+      ],
+      "must_not": [
+        "The Ponds",
+        "12 Banksia Way",
+        "$1,150,000"
+      ],
+      "question": "3 bed house in Kellyville near the station with a renovated kitchen"
+    },
+    {
+      "expected": [
+        "HB-005"
+      ],
+      "must_not": [
+        "Parramatta",
+        "5/45 Church Street",
+        "$620"
+      ],
+      "question": "pet friendly rental apartment near Bondi Beach"
+    },
+    {
+      "expected": [
+        "HB-003"
+      ],
+      "must_not": [
+        "Bondi Beach",
+        "3/88 Campbell Parade",
+        "$950"
+      ],
+      "question": "2 bedroom apartment in Parramatta near the station"
+    },
+    {
+      "expected": [
+        "HB-004"
+      ],
+      "must_not": [
+        "Kellyville",
+        "$1,280,000"
+      ],
+      "question": "townhouse in Newtown with a chef's kitchen"
+    },
+    {
+      "expected": [
+        "HB-006"
+      ],
+      "must_not": [
+        "Bondi Beach",
+        "$950"
+      ],
+      "question": "1 bedroom apartment near Chatswood station"
+    },
+    {
+      "expected": [
+        "HB-001"
+      ],
+      "must_not": [
+        "Kellyville",
+        "8 Wattle Grove"
+      ],
+      "question": "house with ducted air conditioning and solar"
+    },
+    {
+      "expected": [
+        "HB-006"
+      ],
+      "filters": {
+        "max_price": 600,
+        "status": "rent"
+      },
+      "must_not": [
+        "$620",
+        "Parramatta",
+        "5/45 Church Street"
+      ],
+      "question": "1 bedroom apartment in Chatswood under $600 a week"
+    },
+    {
+      "expected": [
+        "HB-003"
+      ],
+      "must_not": [
+        "Bondi Beach",
+        "3/88 Campbell Parade"
+      ],
+      "question": "apartment with a balcony in Parramatta"
+    },
+    {
+      "expected": [
+        "HB-002"
+      ],
+      "must_not": [
+        "The Ponds",
+        "12 Banksia Way"
+      ],
+      "question": "house with a north-facing backyard near Kellyville station"
+    },
+    {
+      "expected": [],
+      "fallback": true,
+      "must_not": [
+        "Banksia",
+        "Wattle",
+        "Church Street",
+        "Enmore",
+        "Campbell",
+        "Archer",
+        "$1,150,000",
+        "$620"
+      ],
+      "question": "castle with a moat in Double Bay"
+    },
+    {
+      "expected": [],
+      "fallback": true,
+      "must_not": [
+        "Banksia",
+        "Wattle",
+        "Church Street",
+        "Enmore",
+        "Campbell",
+        "Archer",
+        "$1,150,000",
+        "$950"
+      ],
+      "question": "does the agency manage commercial offices in the Sydney CBD"
+    }
+  ]
+}
