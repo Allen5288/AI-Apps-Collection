@@ -1,0 +1,22 @@
+{
+  "mean_recall": 1.0,
+  "top1_correct": 10,
+  "answerable": 10,
+  "fallback": "1/2",
+  "faithfulness_failures": 2,
+  "gates_passed": false,
+  "results": [
+    {"question": "4 bedroom family house in The Ponds with solar panels", "cited": ["HB-001"], "fallback": false, "recall": 1.0, "expected": ["HB-001"], "faithfulness_failures": []},
+    {"question": "3 bed house in Kellyville near the station with a renovated kitchen", "cited": ["HB-002", "HB-004", "HB-005"], "fallback": false, "recall": 1.0, "expected": ["HB-002"], "faithfulness_failures": []},
+    {"question": "pet friendly rental apartment near Bondi Beach", "cited": ["HB-005", "HB-006"], "fallback": false, "recall": 1.0, "expected": ["HB-005"], "faithfulness_failures": []},
+    {"question": "2 bedroom apartment in Parramatta near the station", "cited": ["HB-003", "HB-006", "HB-001"], "fallback": false, "recall": 1.0, "expected": ["HB-003"], "faithfulness_failures": []},
+    {"question": "townhouse in Newtown with a chef's kitchen", "cited": ["HB-004"], "fallback": false, "recall": 1.0, "expected": ["HB-004"], "faithfulness_failures": []},
+    {"question": "1 bedroom apartment near Chatswood station", "cited": ["HB-006", "HB-003"], "fallback": false, "recall": 1.0, "expected": ["HB-006"], "faithfulness_failures": []},
+    {"question": "house with ducted air conditioning and solar", "cited": ["HB-001", "HB-003"], "fallback": false, "recall": 1.0, "expected": ["HB-001"], "faithfulness_failures": []},
+    {"question": "1 bedroom apartment in Chatswood under $600 a week", "cited": ["HB-006"], "fallback": false, "recall": 1.0, "expected": ["HB-006"], "faithfulness_failures": []},
+    {"question": "apartment with a balcony in Parramatta", "cited": ["HB-003", "HB-006"], "fallback": false, "recall": 1.0, "expected": ["HB-003"], "faithfulness_failures": []},
+    {"question": "house with a north-facing backyard near Kellyville station", "cited": ["HB-002"], "fallback": false, "recall": 1.0, "expected": ["HB-002"], "faithfulness_failures": []},
+    {"question": "castle with a moat in Double Bay", "cited": [], "fallback": true, "recall": 1.0, "faithfulness_failures": []},
+    {"question": "does the agency manage commercial offices in the Sydney CBD", "cited": ["HB-001"], "fallback": false, "recall": 0.0, "faithfulness_failures": ["must-not 'Banksia' appears in answer", "must-not '$1,150,000' appears in answer"]}
+  ]
+}
